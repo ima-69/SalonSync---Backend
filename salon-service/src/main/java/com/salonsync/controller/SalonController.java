@@ -52,6 +52,19 @@ public class SalonController {
         return ResponseEntity.ok(salonDTOS);
     }
 
+    @GetMapping("/{salonId}")
+    public ResponseEntity<SalonDTO> getSalonById(
+            @PathVariable("salonId") Long salonId
+    ) throws Exception {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(1L);
+        Salon salon = salonService.getSalonById(salonId);
+
+        SalonDTO salonDTO = SalonMapper.mapToDTO(salon);
+        return ResponseEntity.ok(salonDTO);
+
+    }
+
 
 
 }
