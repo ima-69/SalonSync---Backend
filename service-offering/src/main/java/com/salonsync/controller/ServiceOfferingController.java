@@ -41,6 +41,15 @@ public class ServiceOfferingController {
         ServiceOffering services = serviceOfferingService
                 .getServiceById(id);
         return ResponseEntity.ok(services);
+    }
+
+    @GetMapping("/list/{ids}")
+    public ResponseEntity<Set<ServiceOffering>> getServicesByIds(
+            @PathVariable Set<Long> ids
+    ) {
+        Set<ServiceOffering> services = serviceOfferingService
+                .getServicesByIds(ids);
+        return ResponseEntity.ok(services);
 
     }
 
