@@ -54,7 +54,7 @@ public class ServiceOfferingServiceImpl implements ServiceOfferingService {
 
     @Override
     public Set<ServiceOffering> getAllServicesBySalonId(Long salonId, Long categoryId) {
-        return Set.of();
+        return serviceOfferingRepository.findBySalonId(salonId);
     }
 
     @Override
