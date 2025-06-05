@@ -18,11 +18,19 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/salon/{id}")
     public ResponseEntity<Set<Category>> getAllCategoriesBySalonId(
             @PathVariable Long id
     ) {
         Set<Category> categories = categoryService.getAllCategoriesBySalonId(id);
         return ResponseEntity.ok(categories);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Category> getCategoryById(
+            @PathVariable Long id
+    ) throws Exception {
+        Category category= categoryService.getCategoryById(id);
+        return ResponseEntity.ok(category);
     }
 }
