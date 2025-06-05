@@ -70,4 +70,13 @@ public class ServiceOfferingServiceImpl implements ServiceOfferingService {
         List<ServiceOffering> services = serviceOfferingRepository.findAllById(ids);
         return new HashSet<>(services);
     }
+
+    @Override
+    public ServiceOffering getServiceById(Long id) throws Exception {
+        ServiceOffering service = serviceOfferingRepository.findById(id).orElse(null);
+        if(service == null) {
+            throw new Exception("service not exist with id "+id);
+        }
+        return service;
+    }
 }

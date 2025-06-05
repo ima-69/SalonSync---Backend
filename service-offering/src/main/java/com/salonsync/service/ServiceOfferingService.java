@@ -21,4 +21,6 @@ public interface ServiceOfferingService {
      Set<ServiceOffering> getAllServicesBySalonId(Long salonId, Long categoryId);
 
      Set<ServiceOffering> getServicesByIds(Set<Long> ids);
+
+     ServiceOffering getServiceById(Long id) throws Exception;
 }
