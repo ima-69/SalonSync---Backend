@@ -38,7 +38,7 @@ public class SalonController {
 
     @GetMapping
     public ResponseEntity<List<SalonDTO>> getSalons() throws Exception {
-        
+
         List<Salon> salons = salonService.getAllSalons();
 
         List<SalonDTO> salonDTOS = salons.stream().map((salon) ->

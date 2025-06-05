@@ -46,6 +46,8 @@ public class SalonServiceImpl implements SalonService {
             existingSalon.setOwnerId(user.getId());
             existingSalon.setOpenTime(salon.getOpenTime());
             existingSalon.setCloseTime(salon.getCloseTime());
+
+            return salonRepository.save(existingSalon);
         }
         throw new Exception("salon not exist");
     }
