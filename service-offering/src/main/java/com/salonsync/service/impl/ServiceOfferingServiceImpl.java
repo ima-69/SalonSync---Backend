@@ -35,8 +35,21 @@ public class ServiceOfferingServiceImpl implements ServiceOfferingService {
     }
 
     @Override
-    public ServiceOffering updateService(Long salonId, ServiceOffering service) {
-        return null;
+    public ServiceOffering updateService(
+            Long serviceId,
+            ServiceOffering service
+    ) throws Exception {
+        ServiceOffering existingService = serviceOfferingRepository.findById(serviceId).orElse(null);
+        if(existingService == null) {
+            throw new Exception("service not exist with id "+serviceId);
+        }
+        existingService.setImage(service.getImage());
+        existingService.setName(service.getName());
+        existingService.setDescription(service.getDescription());
+        existingService.setPrice(service.getPrice());
+        existingService.setDuration(service.getDuration());
+
+        return serviceOfferingRepository.save(existingService);
     }
 
     @Override
