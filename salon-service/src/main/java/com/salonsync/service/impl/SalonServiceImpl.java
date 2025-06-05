@@ -70,7 +70,7 @@ public class SalonServiceImpl implements SalonService {
     }
 
     @Override
-    public List<Salon> getSalonByCity(String city) {
+    public List<Salon> searchSalonByCity(String city) {
         return salonRepository.searchSalons(city);
     }
 }
