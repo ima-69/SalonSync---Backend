@@ -1,6 +1,5 @@
 package com.salonsync.payload.dto;
 
-import com.salonsync.domain.BookingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +17,6 @@ public class BookingDTO {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Set<Long> serviceIds;
-    private BookingStatus status = BookingStatus.PENDING;
+    private int totalPrice;
 
 }
