@@ -139,6 +139,30 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public SalonReport getSalonReport(Long salonId) {
-        return null;
+
+        List<Booking> bookings = getBookingsBySalon(salonId);
+
+        int totalEarnings = bookings.stream()
+                .mapToInt(Booking::getTotalPrice)
+                .sum();
+
+        Integer totalBookings = bookings.size();
+
+        List<Booking> cancelledBookings = bookings.stream()
+                .filter(booking -> booking.getStatus().equals(BookingStatus.CANCELLED))
+                .collect(Collectors.toList());
+
+        Double totalRefund = cancelledBookings.stream()
+                .mapToDouble(Booking::getTotalPrice)
+                .sum();
+
+        SalonReport salonReport = new SalonReport();
+        salonReport.setSalonId(salonId);
+        salonReport.setCancelledBookings(cancelledBookings.size());
+        salonReport.setTotalBookings(totalBookings);
+        salonReport.setTotalEarnings(totalEarnings);
+        salonReport.setTotalRefund(totalRefund);
+
+        return salonReport;
     }
 }
