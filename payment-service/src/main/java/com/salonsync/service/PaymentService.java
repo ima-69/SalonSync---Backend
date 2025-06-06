@@ -7,6 +7,7 @@ import com.salonsync.model.PaymentOrder;
 import com.salonsync.payload.dto.BookingDTO;
 import com.salonsync.payload.dto.UserDTO;
 import com.salonsync.payload.response.PaymentLinkResponse;
+import com.stripe.exception.StripeException;
 
 public interface PaymentService {
 
@@ -14,7 +15,7 @@ public interface PaymentService {
             UserDTO user,
             BookingDTO booking,
             PaymentMethod paymentMethod
-    ) throws RazorpayException;
+    ) throws RazorpayException, StripeException;
 
     PaymentOrder getPaymentOrderById(Long id) throws Exception;
 
@@ -30,5 +31,5 @@ public interface PaymentService {
             UserDTO user,
             Long amount,
             Long orderId
-    );
+    ) throws StripeException;
 }
