@@ -25,19 +25,8 @@ public class ServiceOfferingController {
 
     }
 
-    @GetMapping("/salon/{salonId}")
-    public ResponseEntity<Set<ServiceOffering>> getServicesById(
-            @PathVariable Long salonId,
-            @RequestParam(required = false) Long categoryId
-    ) {
-        Set<ServiceOffering> services = serviceOfferingService
-                .getAllServicesBySalonId(salonId, categoryId);
-        return ResponseEntity.ok(services);
-
-    }
-
     @GetMapping("/{id}")
-    public ResponseEntity<ServiceOffering> getServicesById(
+    public ResponseEntity<ServiceOffering> getServiceById(
             @PathVariable Long id
     ) throws Exception {
         ServiceOffering services = serviceOfferingService

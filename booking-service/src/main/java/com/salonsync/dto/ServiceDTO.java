@@ -1,37 +1,20 @@
-package com.salonsync.model;
+package com.salonsync.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ServiceOffering {
+public class ServiceDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false)
     private String description;
-
-    @Column(nullable = false)
     private double price;
-
-    @Column(nullable = false)
     private int duration;
-
-    @Column(nullable = false)
     private Long salonId;
-
-    @Column(nullable = false)
     private Long categoryId;
-
     private String image;
 }

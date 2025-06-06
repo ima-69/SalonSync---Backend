@@ -30,6 +30,18 @@ public class SalonServiceOfferingController {
 
         ServiceOffering services = serviceOfferingService
                 .createService(salonDTO, serviceDTO, categoryDTO);
+
+        return ResponseEntity.ok(services);
+
+    }
+
+    @PostMapping("{id}")
+    public ResponseEntity<ServiceOffering> updateService(
+            @PathVariable Long id,
+            @RequestBody ServiceOffering serviceOffering
+    ) throws Exception {
+        ServiceOffering services = serviceOfferingService
+                .updateService(id, serviceOffering);
         return ResponseEntity.ok(services);
 
     }
