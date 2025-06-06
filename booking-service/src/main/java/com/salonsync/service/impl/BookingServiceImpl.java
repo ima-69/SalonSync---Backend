@@ -110,8 +110,12 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking updateBooking(Long bookingId, BookingStatus status) {
-        return null;
+    public Booking updateBooking(Long bookingId, BookingStatus status) throws Exception {
+
+        Booking booking = getBookingById(bookingId);
+        booking.setStatus(status);
+
+        return bookingRepository.save(booking);
     }
 
     @Override
