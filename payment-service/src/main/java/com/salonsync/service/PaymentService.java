@@ -1,6 +1,7 @@
 package com.salonsync.service;
 
 import com.razorpay.PaymentLink;
+import com.razorpay.RazorpayException;
 import com.salonsync.domain.PaymentMethod;
 import com.salonsync.model.PaymentOrder;
 import com.salonsync.payload.dto.BookingDTO;
@@ -13,7 +14,7 @@ public interface PaymentService {
             UserDTO user,
             BookingDTO booking,
             PaymentMethod paymentMethod
-    );
+    ) throws RazorpayException;
 
     PaymentOrder getPaymentOrderById(Long id) throws Exception;
 
@@ -23,7 +24,7 @@ public interface PaymentService {
             UserDTO user,
             Long amount,
             Long orderId
-    );
+    ) throws RazorpayException;
 
     String createStripePaymentLink(
             UserDTO user,
