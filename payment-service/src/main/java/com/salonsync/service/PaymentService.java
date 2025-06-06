@@ -15,7 +15,7 @@ public interface PaymentService {
             PaymentMethod paymentMethod
     );
 
-    PaymentOrder getPaymentOrderById(Long id);
+    PaymentOrder getPaymentOrderById(Long id) throws Exception;
 
     PaymentOrder getPaymentOrderByPaymentId(String paymentId);
 
