@@ -1,5 +1,6 @@
 package com.salonsync.controller;
 
+import com.salonsync.domain.BookingStatus;
 import com.salonsync.dto.*;
 import com.salonsync.mapper.BookingMapper;
 import com.salonsync.modal.Booking;
@@ -85,6 +86,15 @@ public class BookingController {
             @PathVariable Long bookingId
     ) throws Exception {
         Booking booking = bookingService.getBookingById(bookingId);
+        return ResponseEntity.ok(BookingMapper.toDTO(booking));
+    }
+
+    @PutMapping("/{bookingId}/status")
+    public ResponseEntity<BookingDTO> updateBookingStatus(
+            @PathVariable Long bookingId,
+            @RequestParam BookingStatus status
+    ) throws Exception {
+        Booking booking = bookingService.updateBooking(bookingId, status);
         return ResponseEntity.ok(BookingMapper.toDTO(booking));
     }
 
