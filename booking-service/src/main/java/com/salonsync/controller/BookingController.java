@@ -1,9 +1,7 @@
 package com.salonsync.controller;
 
-import com.salonsync.dto.BookingRequest;
-import com.salonsync.dto.SalonDTO;
-import com.salonsync.dto.ServiceDTO;
-import com.salonsync.dto.UserDTO;
+import com.salonsync.dto.*;
+import com.salonsync.mapper.BookingMapper;
 import com.salonsync.modal.Booking;
 import com.salonsync.service.BookingService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/booking")
@@ -49,6 +49,33 @@ public class BookingController {
         );
 
         return ResponseEntity.ok(booking);
+    }
+
+    @GetMapping("/customer")
+    public ResponseEntity<Set< BookingDTO>> getBookingByCustomer(
+
+    ){
+
+        List<Booking> bookings = bookingService.getBookingsByCustomer(1L);
+
+        return ResponseEntity.ok(getBookingDTOs(bookings));
+    }
+
+    @GetMapping("/salon")
+    public ResponseEntity<Set< BookingDTO>> getBookingBySalon(
+
+    ){
+
+        List<Booking> bookings = bookingService.getBookingsBySalon(1L);
+
+        return ResponseEntity.ok(getBookingDTOs(bookings));
+    }
+
+    private Set<BookingDTO> getBookingDTOs(List<Booking> bookings) {
+        return bookings.stream()
+                .map(booking -> {
+                    return BookingMapper.toDTO(booking);
+                }).collect(Collectors.toSet());
     }
 
 }
