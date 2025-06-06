@@ -2,6 +2,7 @@ package com.salonsync.controller;
 
 import com.razorpay.RazorpayException;
 import com.salonsync.domain.PaymentMethod;
+import com.salonsync.model.PaymentOrder;
 import com.salonsync.payload.dto.BookingDTO;
 import com.salonsync.payload.dto.UserDTO;
 import com.salonsync.payload.response.PaymentLinkResponse;
@@ -31,6 +32,15 @@ public class PaymentController {
 
         PaymentLinkResponse res = paymentService.createOrder(user, booking, paymentMethod);
 
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/{paymentOrderId}")
+    public ResponseEntity<PaymentOrder> getPaymentOrderById(
+            @PathVariable Long paymentOrderId
+    ) throws Exception {
+
+        PaymentOrder res = paymentService.getPaymentOrderById(paymentOrderId);
         return ResponseEntity.ok(res);
     }
 }
