@@ -4,6 +4,7 @@ import com.salonsync.domain.BookingStatus;
 import com.salonsync.dto.*;
 import com.salonsync.mapper.BookingMapper;
 import com.salonsync.modal.Booking;
+import com.salonsync.modal.SalonReport;
 import com.salonsync.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -116,6 +117,16 @@ public class BookingController {
 
         return ResponseEntity.ok(slotDTOS);
     }
+
+    @GetMapping("/report")
+    public ResponseEntity<SalonReport> getSalonReport(
+
+    ) throws Exception {
+
+        SalonReport report = bookingService.getSalonReport(1L);
+        return ResponseEntity.ok(report);
+    }
+
 
 
 }
