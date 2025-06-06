@@ -9,6 +9,7 @@ import com.salonsync.payload.response.PaymentLinkResponse;
 import com.salonsync.repository.PaymentOrderRepository;
 import com.salonsync.service.PaymentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,9 +18,57 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentOrderRepository paymentOrderRepository;
 
+    @Value("${stripe.api.key}")
+    private String  stripeSecretKey;
+
+    @Value("${razorpay.api.key}")
+    private String razorpayApiKey;
+
+    @Value("${razorpay.api.secret}")
+    private String razorpayApiSecret;
+
     @Override
-    public PaymentLinkResponse createOrder(UserDTO user, BookingDTO booking, PaymentMethod paymentMethod) {
-        return null;
+    public PaymentLinkResponse createOrder(
+            UserDTO user,
+            BookingDTO booking,
+            PaymentMethod paymentMethod
+    ) {
+
+        Long amount = (long) booking.getTotalPrice();
+        PaymentOrder paymentOrder = new PaymentOrder();
+        paymentOrder.setAmount(amount);
+        paymentOrder.setPaymentMethod(paymentMethod);
+        paymentOrder.setBookingId(booking.getId());
+        paymentOrder.setSalonId(booking.getSalonId());
+        PaymentOrder savedPaymentOrder = paymentOrderRepository.save(paymentOrder);
+
+        PaymentLinkResponse response = new PaymentLinkResponse();
+
+        if(paymentMethod.equals(PaymentMethod.RAZORPAY)){
+            PaymentLink payment = createRazorPayPaymentLink(
+                    user,
+                    savedPaymentOrder.getAmount(),
+                    savedPaymentOrder.getId()
+            );
+
+            String paymentUrl = payment.get("short_url");
+            String paymentUrlId = payment.get("id");
+
+            response.setPayment_link_url(paymentUrl);
+            response.setPayment_link_id(paymentUrlId);
+
+            savedPaymentOrder.setPaymentLinkId(paymentUrlId);
+
+            paymentOrderRepository.save(savedPaymentOrder);
+        } else {
+            String paymentUrl = createStripePaymentLink(
+                    user,
+                    savedPaymentOrder.getAmount(),
+                    savedPaymentOrder.getId()
+            );
+            response.setPayment_link_url(paymentUrl);
+        }
+        return response;
     }
 
     @Override
