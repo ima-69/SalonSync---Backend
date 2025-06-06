@@ -1,10 +1,54 @@
 package com.salonsync.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.salonsync.dto.BookingRequest;
+import com.salonsync.dto.SalonDTO;
+import com.salonsync.dto.ServiceDTO;
+import com.salonsync.dto.UserDTO;
+import com.salonsync.modal.Booking;
+import com.salonsync.service.BookingService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/booking")
+@RequiredArgsConstructor
 public class BookingController {
+
+    private final BookingService bookingService;
+
+    @PostMapping
+    public ResponseEntity<Booking> createBooking(
+            @RequestParam Long salonId,
+            @RequestBody BookingRequest bookingRequest
+    ) throws Exception {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(1L);
+
+        SalonDTO salonDTO = new SalonDTO();
+        salonDTO.setId(salonId);
+
+        Set<ServiceDTO> serviceDTOSet = new HashSet<>();
+
+        ServiceDTO serviceDTO = new ServiceDTO();
+        serviceDTO.setId(1L);
+        serviceDTO.setPrice(399);
+        serviceDTO.setDuration(45);
+        serviceDTO.setName("Hair cut for men");
+
+        serviceDTOSet.add(serviceDTO);
+
+        Booking booking = bookingService.createBooking(
+                bookingRequest,
+                userDTO,
+                salonDTO,
+                serviceDTOSet
+        );
+
+        return ResponseEntity.ok(booking);
+    }
 
 }
