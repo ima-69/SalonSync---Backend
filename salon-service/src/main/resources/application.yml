@@ -6,7 +6,7 @@ spring:
     name: salon-service
 
   datasource:
-    url: jdbc:mysql://localhost:3306/salondb_salonsync
+    url: jdbc:mysql://localhost:3306/salondb_salonsync?createDatabaseIfNotExist=true
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
