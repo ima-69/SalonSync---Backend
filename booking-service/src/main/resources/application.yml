@@ -11,7 +11,7 @@ spring:
     show-sql: true
 
   datasource:
-    url: jdbc:mysql://localhost:3306/bookingdb_salonsync
+    url: jdbc:mysql://localhost:3306/bookingdb_salonsync?createDatabaseIfNotExist=true
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
