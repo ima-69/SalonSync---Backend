@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class UserRequest {
     private String username;
-    private String enabled;
+    private Boolean enabled;
     private String firstName;
     private String lastName;
     private String email;

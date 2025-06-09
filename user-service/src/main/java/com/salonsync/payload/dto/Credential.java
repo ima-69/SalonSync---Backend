@@ -6,5 +6,5 @@ import lombok.Data;
 public class Credential {
     private String type;
     private String value;
-    private String temporary;
+    private Boolean temporary;
 }
