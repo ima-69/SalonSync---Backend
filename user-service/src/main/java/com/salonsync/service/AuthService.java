@@ -5,7 +5,7 @@ import com.salonsync.payload.response.AuthResponse;
 
 public interface AuthService {
 
-    AuthResponse login(String username, String password);
+    AuthResponse login(String username, String password) throws Exception;
     AuthResponse signUp(SignupDTO req) throws Exception;
     AuthResponse getAccessTokenFromRefreshToken(String refreshToken);
 
