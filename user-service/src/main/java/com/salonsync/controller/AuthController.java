@@ -6,10 +6,7 @@ import com.salonsync.payload.response.AuthResponse;
 import com.salonsync.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,14 +36,13 @@ public class AuthController {
         return ResponseEntity.ok(res);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(
-            @RequestBody LoginDTO req
+    @PostMapping("/access-token/refresh-token/{refreshToken}")
+    public ResponseEntity<AuthResponse> getAccessToken(
+            @PathVariable String refreshToken
     ) throws Exception {
 
-        AuthResponse res = authService.login(
-                req.getUsername(),
-                req.getPassword()
+        AuthResponse res = authService.getAccessTokenFromRefreshToken(
+            refreshToken
         );
         return ResponseEntity.ok(res);
     }
