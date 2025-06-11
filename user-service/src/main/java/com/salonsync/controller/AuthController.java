@@ -30,13 +30,13 @@ public class AuthController {
     ) throws Exception {
 
         AuthResponse res = authService.login(
-                req.getUsername(),
+                req.getEmail(),
                 req.getPassword()
         );
         return ResponseEntity.ok(res);
     }
 
-    @PostMapping("/access-token/refresh-token/{refreshToken}")
+    @GetMapping("/access-token/refresh-token/{refreshToken}")
     public ResponseEntity<AuthResponse> getAccessToken(
             @PathVariable String refreshToken
     ) throws Exception {

@@ -29,7 +29,7 @@ public class KeycloakService {
       private static final String username = "salonsync";
       private static final String password = "admin";
       private static final String clientId = "9c9b3f51-19ad-42f6-b7cd-1290584686bc";
-      
+
 
       private final RestTemplate restTemplate;
 
@@ -54,6 +54,7 @@ public class KeycloakService {
             userRequest.setEnabled(true);
             userRequest.setFirstName(signupDTO.getFirstName());
             userRequest.setLastName(signupDTO.getLastName());
+            userRequest.getCredentials().add(credential);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -216,6 +217,34 @@ public class KeycloakService {
                   );
             } catch (Exception e) {
                   throw new Exception("Failed to assign new role "+ e.getMessage());
+            }
+
+
+      }
+
+      public KeycloakUserDTO fetchUserProfileByJwt(String token) throws Exception {
+
+            String url = KEYCLOAK_BASE_URL+"/realms/master/protocol/openid-connect/userinfo";
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", token);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<String> requestEntity =
+                    new HttpEntity<>(headers);
+
+            try{
+                  ResponseEntity<KeycloakUserDTO> response = restTemplate.exchange(
+                          url,
+                          HttpMethod.GET,
+                          requestEntity,
+                          KeycloakUserDTO.class
+                  );
+
+                  return response.getBody();
+
+            } catch (Exception e) {
+                  throw new Exception("Failed to get user info "+ e.getMessage());
             }
 
 
