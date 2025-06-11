@@ -7,6 +7,6 @@ public interface AuthService {
 
     AuthResponse login(String username, String password) throws Exception;
     AuthResponse signUp(SignupDTO req) throws Exception;
-    AuthResponse getAccessTokenFromRefreshToken(String refreshToken);
+    AuthResponse getAccessTokenFromRefreshToken(String refreshToken) throws Exception;
 
 }
