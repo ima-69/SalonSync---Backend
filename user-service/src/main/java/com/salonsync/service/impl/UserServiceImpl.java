@@ -2,7 +2,9 @@ package com.salonsync.service.impl;
 
 import com.salonsync.exception.UserException;
 import com.salonsync.model.User;
+import com.salonsync.payload.dto.KeycloakUserDTO;
 import com.salonsync.repository.UserRepository;
+import com.salonsync.service.KeycloakService;
 import com.salonsync.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final KeycloakService keycloakService;
 
     @Override
     public User createUser(User user) {
@@ -62,5 +65,14 @@ public class UserServiceImpl implements UserService {
             throw new UserException("User not found");
         }
         userRepository.deleteById(user.get().getId());
+    }
+
+    @Override
+    public User getUserFromJwt(String jwt) throws Exception {
+
+        KeycloakUserDTO keycloakUserDTO = keycloakService.fetchUserProfileByJwt(jwt);
+        User user = userRepository.findByEmail(keycloakUserDTO.getEmail());
+
+        return user;
     }
 }
