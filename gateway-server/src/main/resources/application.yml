@@ -49,6 +49,13 @@ spring:
             - Path= /api/payments/**
 
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: "http://localhost:8080/realms/master/protocol/openid-connect/token"
+
+
 eureka:
   instance:
     prefer-ip-address: true
