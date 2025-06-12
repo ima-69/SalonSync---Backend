@@ -1,5 +1,6 @@
 package com.salonsync.controller;
 
+import com.salonsync.exception.UserException;
 import com.salonsync.mapper.SalonMapper;
 import com.salonsync.model.Salon;
 import com.salonsync.payload.dto.SalonDTO;
@@ -17,20 +18,23 @@ import java.util.List;
 public class SalonController {
 
     private final SalonService salonService;
+    private final com.salonsync.service.clients.UserFeignClient userFeignClient;
 
     @PostMapping
-    public ResponseEntity<SalonDTO> createSalon(@RequestBody SalonDTO salonDTO) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1L);
+    public ResponseEntity<SalonDTO> createSalon(
+            @RequestBody SalonDTO salonDTO,
+            @RequestHeader("Authorization") String jwt
+    ) throws UserException {
+        UserDTO userDTO = userFeignClient.getUserFromJwtToken(jwt).getBody();
         Salon salon = salonService.createSalon(salonDTO, userDTO);
         SalonDTO salonDTO1 = SalonMapper.mapToDTO(salon);
         return ResponseEntity.ok(salonDTO1);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<SalonDTO> updateSalon(@PathVariable("id") Long salodId, @RequestBody SalonDTO salonDTO) throws Exception {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1L);
+    public ResponseEntity<SalonDTO> updateSalon(@PathVariable("id") Long salodId, @RequestBody SalonDTO salonDTO,@RequestHeader("Authorization") String jwt) throws Exception {
+        UserDTO userDTO = userFeignClient.getUserFromJwtToken(jwt).getBody();
+
         Salon salon = salonService.updateSalon(salonDTO, userDTO, salodId);
         SalonDTO salonDTO1 = SalonMapper.mapToDTO(salon);
         return ResponseEntity.ok(salonDTO1);
@@ -82,10 +86,15 @@ public class SalonController {
 
     @GetMapping("/owner")
     public ResponseEntity<SalonDTO> getSalonByOwnerId(
-            @PathVariable Long ownerId
+
+            @RequestHeader("Authorization") String jwt
     ) throws Exception {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(1L);
+        UserDTO userDTO = userFeignClient.getUserFromJwtToken(jwt).getBody();
+
+        if(userDTO == null) {
+            throw new Exception("user not found");
+        }
+
         Salon salon = salonService.getSalonByOwnerId(userDTO.getId());
 
         SalonDTO salonDTO = SalonMapper.mapToDTO(salon);
