@@ -26,6 +26,13 @@ public class UserController {
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
+    @GetMapping("/api/users/profile")
+    public ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String jwt) throws Exception {
+        
+        User user = userService.getUserFromJwt(jwt);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
+    }
+
     @GetMapping("/api/users/all")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
