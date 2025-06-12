@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.Set;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/categories/salon-owner")
@@ -22,6 +25,15 @@ public class SalonCategoryController {
         salonDTO.setId(1L);
         Category newCategory = categoryService.createCategory(category, salonDTO);
         return ResponseEntity.ok(newCategory);
+    }
+
+    @GetMapping("/salon/{salonId}/category/{id}")
+    public ResponseEntity<Category> getCategoriesByIdAndSalon(
+            @PathVariable Long id,
+            @PathVariable Long salonId
+    ) throws Exception {
+        Category categories = categoryService.findByIdAndSalonId(id, salonId);
+        return ResponseEntity.ok(categories);
     }
 
     @DeleteMapping("/{id}")
