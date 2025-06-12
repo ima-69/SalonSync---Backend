@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class KeycloakRoleConverter  implements Converter<Jwt, Collection<GrantedAuthority>> {
 
 
-    
+
     @Override
     public Collection<GrantedAuthority> convert(Jwt jwt) {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
