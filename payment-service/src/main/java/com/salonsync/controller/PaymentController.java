@@ -2,11 +2,13 @@ package com.salonsync.controller;
 
 import com.razorpay.RazorpayException;
 import com.salonsync.domain.PaymentMethod;
+import com.salonsync.exception.UserException;
 import com.salonsync.model.PaymentOrder;
 import com.salonsync.payload.dto.BookingDTO;
 import com.salonsync.payload.dto.UserDTO;
 import com.salonsync.payload.response.PaymentLinkResponse;
 import com.salonsync.service.PaymentService;
+import com.salonsync.service.clients.UserFeignClient;
 import com.stripe.exception.StripeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,17 +20,16 @@ import org.springframework.web.bind.annotation.*;
 public class PaymentController {
 
     private final PaymentService paymentService;
+    private final UserFeignClient userFeignClient;
 
     @PostMapping("/create")
     public ResponseEntity<PaymentLinkResponse> createPaymentLink(
             @RequestBody BookingDTO booking,
-            @RequestParam PaymentMethod paymentMethod
-    ) throws StripeException, RazorpayException {
-        UserDTO user = new UserDTO();
-        user.setFirstName("Imansha");
-        user.setLastName("Dilshan");
-        user.setEmail("imansha@gmail.com");
-        user.setId(1L);
+            @RequestParam PaymentMethod paymentMethod,
+            @RequestHeader("Authorization") String jwt
+    ) throws StripeException, RazorpayException, UserException {
+
+        UserDTO user = userFeignClient.getUserFromJwtToken(jwt).getBody();
 
         PaymentLinkResponse res = paymentService.createOrder(user, booking, paymentMethod);
 
