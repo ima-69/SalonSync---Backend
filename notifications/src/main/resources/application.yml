@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: notifications
+    name: notification-service
 
   jpa:
     hibernate:
