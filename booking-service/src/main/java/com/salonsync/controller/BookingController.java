@@ -74,7 +74,7 @@ public class BookingController {
     public ResponseEntity<Set< BookingDTO>> getBookingByCustomer(
         @RequestHeader("Authorization") String jwt
     ) throws Exception {
-        UserDTO userDTO = userFeignClient.getUserFromJwtToken(jwt).getBody();
+        com.salonsync.payload.dto.UserDTO userDTO = userFeignClient.getUserFromJwtToken(jwt).getBody();
 
         if(userDTO == null){
             throw new Exception("user not found from jwt token");
