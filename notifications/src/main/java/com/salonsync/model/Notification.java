@@ -28,4 +28,6 @@ public class Notification {
     private Long salonId;
 
     private LocalDateTime createdAt;
+
+    public String description;
 }
