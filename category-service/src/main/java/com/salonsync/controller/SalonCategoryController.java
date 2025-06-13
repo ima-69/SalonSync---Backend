@@ -3,6 +3,7 @@ package com.salonsync.controller;
 import com.salonsync.dto.SalonDTO;
 import com.salonsync.model.Category;
 import com.salonsync.service.CategoryService;
+import com.salonsync.service.clients.SalonFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +17,14 @@ import java.util.Set;
 public class SalonCategoryController {
 
     private final CategoryService categoryService;
+    private final SalonFeignClient salonFeignClient;
 
     @PostMapping()
     public ResponseEntity<Category> createCategory(
-            @RequestBody Category category
-    ) {
-        SalonDTO salonDTO = new SalonDTO();
-        salonDTO.setId(1L);
+            @RequestBody Category category,
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception {
+        SalonDTO salonDTO = salonFeignClient.getSalonByOwner(jwt).getBody();
         Category newCategory = categoryService.createCategory(category, salonDTO);
         return ResponseEntity.ok(newCategory);
     }
@@ -38,10 +40,10 @@ public class SalonCategoryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCategoryById(
-            @PathVariable Long id
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String jwt
     ) throws Exception {
-        SalonDTO salonDTO = new SalonDTO();
-        salonDTO.setId(1L);
+        SalonDTO salonDTO = salonFeignClient.getSalonByOwner(jwt).getBody();
         categoryService.deleteCategoryById(id, salonDTO.getId());
         return ResponseEntity.ok("category deleted successfully");
     }
