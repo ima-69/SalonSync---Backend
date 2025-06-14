@@ -25,7 +25,7 @@ public class RabbitConfig {
         return rabbitTemplate;
     }
 
-    
+
     @Bean
     public Queue notificationQueue() {
         return new Queue("notification-queue");
