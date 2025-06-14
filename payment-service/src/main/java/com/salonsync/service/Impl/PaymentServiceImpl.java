@@ -6,6 +6,8 @@ import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 import com.salonsync.domain.PaymentMethod;
 import com.salonsync.domain.PaymentOrderStatus;
+import com.salonsync.messaging.BookingEventProducer;
+import com.salonsync.messaging.NotificationEventProducer;
 import com.salonsync.model.PaymentOrder;
 import com.salonsync.payload.dto.BookingDTO;
 import com.salonsync.payload.dto.UserDTO;
@@ -18,6 +20,7 @@ import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,9 @@ import org.springframework.stereotype.Service;
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentOrderRepository paymentOrderRepository;
+    private final RabbitTemplate rabbitTemplate;
+    private final BookingEventProducer bookingEventProducer;
+    private final NotificationEventProducer notificationEventProducer;
 
     @Value("${stripe.api.key}")
     private String  stripeSecretKey;
@@ -174,7 +180,8 @@ public class PaymentServiceImpl implements PaymentService {
 
                 if(status.equals("captured")){
 
-                    // produce kafka event
+                    bookingEventProducer.sentBookingUpdateEvent(paymentOrder);
+                    notificationEventProducer.sentNotificationEvent(paymentOrder.getBookingId(), paymentOrder.getUserId(), paymentOrder.getSalonId());
 
                     paymentOrder.setStatus(PaymentOrderStatus.SUCCESS);
                     paymentOrderRepository.save(paymentOrder);
