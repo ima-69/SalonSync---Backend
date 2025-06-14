@@ -15,7 +15,11 @@ spring:
     password: 123@idr
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-
+  rabbitmq:
+    port: 5672
+    host: rabbit
+    username: guest
+    password: guest
 
   eureka:
     instance:
