@@ -6,6 +6,7 @@ import com.salonsync.dto.SalonDTO;
 import com.salonsync.dto.ServiceDTO;
 import com.salonsync.dto.UserDTO;
 import com.salonsync.modal.Booking;
+import com.salonsync.modal.PaymentOrder;
 import com.salonsync.modal.SalonReport;
 
 import java.time.LocalDate;
@@ -25,4 +26,7 @@ public interface BookingService {
     Booking updateBooking(Long bookingId, BookingStatus status) throws Exception;
     List<Booking> getBookingsByDate(LocalDate date, Long salonId);
     SalonReport getSalonReport(Long salonId);
+
+    Booking bookingSucess(PaymentOrder order) throws Exception;
+
 }
