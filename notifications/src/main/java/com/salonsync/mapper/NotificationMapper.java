@@ -1,7 +1,7 @@
 package com.salonsync.mapper;
 
 
-import com.salonsync.model.Notification;
+import com.salonsync.modal.Notification;
 import com.salonsync.payload.dto.BookingDTO;
 import com.salonsync.payload.dto.NotificationDTO;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class NotificationMapper {
 
     public NotificationDTO toDTO(Notification notification,
-                                 BookingDTO bookingDTO) {
+                                                         BookingDTO bookingDTO) {
         if (notification == null) {
             return null;
         }

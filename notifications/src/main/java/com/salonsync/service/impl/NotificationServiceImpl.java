@@ -1,12 +1,12 @@
 package com.salonsync.service.impl;
 
-import com.salonsync.client.BookingFeignClient;
 import com.salonsync.mapper.NotificationMapper;
-import com.salonsync.model.Notification;
+import com.salonsync.modal.Notification;
 import com.salonsync.payload.dto.BookingDTO;
 import com.salonsync.payload.dto.NotificationDTO;
 import com.salonsync.repository.NotificationRepository;
 import com.salonsync.service.NotificationService;
+import com.salonsync.service.client.BookingFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +17,11 @@ import java.util.List;
 public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
-    private final BookingFeignClient bookingFeignClient;
     private final NotificationMapper notificationMapper;
+    private final BookingFeignClient bookingFeignClient;
+    private final RealTimeCommunicationService realTimeCommunicationService;
+
+
 
     @Override
     public NotificationDTO createNotification(Notification notification) {
@@ -30,7 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
                 savedNotification,
                 bookingDTO
         );
-
+        realTimeCommunicationService.sendNotification(notificationDTO);
         return notificationDTO;
     }
 

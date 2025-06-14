@@ -1,17 +1,17 @@
 package com.salonsync.controller;
 
-import com.salonsync.client.BookingFeignClient;
 import com.salonsync.mapper.NotificationMapper;
+import com.salonsync.modal.Notification;
 import com.salonsync.payload.dto.BookingDTO;
 import com.salonsync.payload.dto.NotificationDTO;
 import com.salonsync.service.NotificationService;
-import com.salonsync.model.Notification;
+import com.salonsync.service.client.BookingFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @RestController
 @RequestMapping("/api/notifications")
@@ -32,7 +32,6 @@ public class NotificationController {
         return ResponseEntity.ok(createdNotification);
     }
 
-
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<NotificationDTO>> getNotificationsByUserId(
             @PathVariable Long userId) {
@@ -47,6 +46,8 @@ public class NotificationController {
 
         return ResponseEntity.ok(notificationDTOS);
     }
+
+
 
     @GetMapping
     public ResponseEntity<List<Notification>> getNotifications() {
@@ -77,6 +78,4 @@ public class NotificationController {
         notificationService.deleteNotification(notificationId);
         return ResponseEntity.noContent().build();
     }
-
-
 }

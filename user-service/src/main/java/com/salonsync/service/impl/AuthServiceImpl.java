@@ -1,12 +1,13 @@
 package com.salonsync.service.impl;
 
-import com.salonsync.model.User;
-import com.salonsync.payload.dto.SignupDTO;
+import com.salonsync.modal.User;
+import com.salonsync.payload.request.SignupDto;
 import com.salonsync.payload.response.AuthResponse;
 import com.salonsync.payload.response.TokenResponse;
 import com.salonsync.repository.UserRepository;
 import com.salonsync.service.AuthService;
-import com.salonsync.service.KeycloakService;
+
+import com.salonsync.service.KeycloakUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,78 +18,69 @@ import java.time.LocalDateTime;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-    private final KeycloakService keycloakService;
+    private final KeycloakUserService keycloakUserService;
 
     @Override
-    public AuthResponse login(String username, String password) throws Exception {
-        TokenResponse tokenResponse = keycloakService.getAdminAccessToken(
-                username,
-                password,
-                "password",
-                null
-        );
+    public AuthResponse signup(SignupDto req) throws Exception {
 
-        AuthResponse authResponse = new AuthResponse();
-        authResponse.setRefreshToken(tokenResponse.getRefreshToken());
-        authResponse.setJwt(tokenResponse.getAccessToken());
+        keycloakUserService.createUser(req);
 
-        authResponse.setMessage("User logged in successfully");
+        User createdUser = new User();
+        createdUser.setEmail(req.getEmail());
+        createdUser.setCreatedAt(LocalDateTime.now());
+        createdUser.setPhone(req.getPhone());
+        createdUser.setRole(req.getRole());
+        createdUser.setFullName(req.getFullName());
+        createdUser.setUsername(req.getUsername());
+        userRepository.save(createdUser);
 
 
-        return authResponse;
-    }
-
-    @Override
-    public AuthResponse signUp(SignupDTO req) throws Exception {
-
-        keycloakService.createUser(req);
-
-        User user = new User();
-        user.setUsername(req.getUsername());
-        user.setPassword(req.getPassword());
-        user.setEmail(req.getEmail());
-        user.setRole(req.getRole());
-        user.setFirstName(req.getFirstName());
-        user.setLastName(req.getLastName());
-        user.setCreatedAt(LocalDateTime.now());
-
-        user = userRepository.save(user);
-
-        TokenResponse tokenResponse = keycloakService.getAdminAccessToken(
+        TokenResponse tokenResponse= keycloakUserService.getAdminAccessToken(
                 req.getUsername(),
                 req.getPassword(),
                 "password",
                 null
         );
 
-        AuthResponse authResponse = new AuthResponse();
-        authResponse.setRefreshToken(tokenResponse.getRefreshToken());
-        authResponse.setJwt(tokenResponse.getAccessToken());
-        authResponse.setRole(user.getRole());
-        authResponse.setMessage("User registered successfully");
-
-
-        return authResponse;
+        AuthResponse response = new AuthResponse();
+        response.setTitle("Welcome " + createdUser.getEmail());
+        response.setMessage("Register success");
+        response.setJwt(tokenResponse.getAccessToken());
+        response.setRefresh_token(tokenResponse.getRefreshToken());
+        return response;
     }
 
     @Override
     public AuthResponse getAccessTokenFromRefreshToken(String refreshToken) throws Exception {
-
-        TokenResponse tokenResponse = keycloakService.getAdminAccessToken(
+        TokenResponse tokenResponse= keycloakUserService.getAdminAccessToken(
                 null,
                 null,
                 "refresh_token",
                 refreshToken
         );
+        AuthResponse response = new AuthResponse();
 
-        AuthResponse authResponse = new AuthResponse();
-        authResponse.setRefreshToken(tokenResponse.getRefreshToken());
-        authResponse.setJwt(tokenResponse.getAccessToken());
-
-        authResponse.setMessage("User logged in successfully");
-
-
-        return authResponse;
-
+        response.setMessage("Access token received");
+        response.setJwt(tokenResponse.getAccessToken());
+        response.setRefresh_token(tokenResponse.getRefreshToken());
+        return response;
     }
+
+    @Override
+    public AuthResponse login(String username, String password) throws Exception {
+        TokenResponse tokenResponse=keycloakUserService.getAdminAccessToken(
+                username,
+                password,
+                "password",
+                null
+        );
+        AuthResponse response = new AuthResponse();
+        response.setTitle("Welcome Back " + username);
+        response.setMessage("login success");
+        response.setJwt(tokenResponse.getAccessToken());
+        response.setRefresh_token(tokenResponse.getRefreshToken());
+        return response;
+    }
+
+
 }

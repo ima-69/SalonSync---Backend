@@ -1,78 +1,56 @@
 package com.salonsync.service.impl;
 
+
 import com.salonsync.exception.UserException;
-import com.salonsync.model.User;
-import com.salonsync.payload.dto.KeycloakUserDTO;
+
+import com.salonsync.modal.User;
+
+
+import com.salonsync.payload.dto.KeycloakUserinfo;
 import com.salonsync.repository.UserRepository;
-import com.salonsync.service.KeycloakService;
+
+import com.salonsync.service.KeycloakUserService;
 import com.salonsync.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-    private final KeycloakService keycloakService;
 
-    @Override
-    public User createUser(User user) {
-        return userRepository.save(user);
-    }
+	private final UserRepository userRepository;
+	private final KeycloakUserService keycloakUserService;
 
-    @Override
-    public User getUserById(long id) throws UserException {
-        Optional<User> user = userRepository.findById(id);
-        if(user.isPresent()) {
-            return user.get();
-        }
-        throw new UserException("User not found");
-    }
 
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
 
-    @Override
-    public User updateUser(long id, User userDetails) throws UserException {
-        Optional<User> user = userRepository.findById(id);
+	@Override
+	public User getUserByEmail(String email) throws UserException {
+		User user=userRepository.findByEmail(email);
+		if(user==null){
+			throw new UserException("User not found with email: "+email);
+		}
+		return user;
+	}
 
-        if (user.isEmpty()) {
-            throw new UserException("User not found");
-        }
+	@Override
+	public User getUserFromJwtToken(String jwt) throws Exception {
+		KeycloakUserinfo userinfo = keycloakUserService.fetchUserProfileByJwt(jwt);
+        return userRepository.findByEmail(userinfo.getEmail());
+	}
 
-        User existingUser = user.get();
-        existingUser.setFirstName(userDetails.getFirstName());
-        existingUser.setLastName(userDetails.getLastName());
-        existingUser.setUsername(userDetails.getUsername());
-        existingUser.setEmail(userDetails.getEmail());
-        existingUser.setPhone(userDetails.getPhone());
-        existingUser.setRole(userDetails.getRole());
-        existingUser.setUpdatedAt(java.time.LocalDateTime.now());
-        existingUser.setPassword(userDetails.getPassword());
+	@Override
+	public User getUserById(Long id) throws UserException {
+		return userRepository.findById(id).orElse(null);
+	}
 
-        return userRepository.save(existingUser);
-    }
+	@Override
+	public List<User> getAllUsers() {
+		return userRepository.findAll();
+	}
 
-    @Override
-    public void deleteUser(long id) throws UserException {
-        Optional<User> user = userRepository.findById(id);
-        if(user.isEmpty()) {
-            throw new UserException("User not found");
-        }
-        userRepository.deleteById(user.get().getId());
-    }
 
-    @Override
-    public User getUserFromJwt(String jwt) throws Exception {
-
-        KeycloakUserDTO keycloakUserDTO = keycloakService.fetchUserProfileByJwt(jwt);
-        User user = userRepository.findByEmail(keycloakUserDTO.getEmail());
-
-        return user;
-    }
 }

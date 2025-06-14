@@ -110,7 +110,7 @@
 				<version>3.4.4</version>
 				<configuration>
 					<to>
-						<image>zosh/salon-review:v1</image>
+						<image>imadil69/salon-review:v1</image>
 					</to>
 				</configuration>
 			</plugin>

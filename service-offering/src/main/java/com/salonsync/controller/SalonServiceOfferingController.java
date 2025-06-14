@@ -1,52 +1,51 @@
 package com.salonsync.controller;
 
-import com.salonsync.dto.CategoryDTO;
-import com.salonsync.dto.SalonDTO;
-import com.salonsync.dto.ServiceDTO;
-import com.salonsync.model.ServiceOffering;
+import com.salonsync.modal.ServiceOffering;
+import com.salonsync.payload.dto.CategoryDTO;
+import com.salonsync.payload.dto.SalonDTO;
+import com.salonsync.payload.dto.ServiceDTO;
 import com.salonsync.service.ServiceOfferingService;
 import com.salonsync.service.clients.CategoryFeignClient;
 import com.salonsync.service.clients.SalonFeignClient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
-
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/service-offering/salon-owner")
 public class SalonServiceOfferingController {
 
     private final ServiceOfferingService serviceOfferingService;
-    private final SalonFeignClient salonFeignClient;
-    private final CategoryFeignClient categoryFeignClient;
+    private final SalonFeignClient salonService;
+    private final CategoryFeignClient categoryService;
 
     @PostMapping
     public ResponseEntity<ServiceOffering> createService(
-            @RequestBody ServiceDTO serviceDTO,
-            @RequestHeader("Authorization") String jwt
-    ) throws Exception {
-        SalonDTO salonDTO = (SalonDTO) salonFeignClient.getSalonByOwner(jwt).getBody();
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody ServiceDTO service) throws Exception {
 
-        CategoryDTO categoryDTO = categoryFeignClient.getCategoriesByIdAndSalon(serviceDTO.getCategoryId(), salonDTO.getId()).getBody();
-        categoryDTO.setId(serviceDTO.getCategoryId());
+        SalonDTO salon=salonService.getSalonByOwner(jwt).getBody();
 
-        ServiceOffering services = serviceOfferingService
-                .createService(salonDTO, serviceDTO, categoryDTO);
+        CategoryDTO category=categoryService
+                .getCategoryById(service.getCategory()).getBody();
 
-        return ResponseEntity.ok(services);
-
+        ServiceOffering createdService = serviceOfferingService
+                .createService(service,salon,category);
+        return new ResponseEntity<>(createdService, HttpStatus.CREATED);
     }
 
-    @PostMapping("{id}")
+    @PatchMapping("/{serviceId}")
     public ResponseEntity<ServiceOffering> updateService(
-            @PathVariable Long id,
-            @RequestBody ServiceOffering serviceOffering
-    ) throws Exception {
-        ServiceOffering services = serviceOfferingService
-                .updateService(id, serviceOffering);
-        return ResponseEntity.ok(services);
-
+            @PathVariable Long serviceId,
+            @RequestBody ServiceOffering service) throws Exception {
+        ServiceOffering updatedService = serviceOfferingService
+                .updateService(serviceId, service);
+        if (updatedService != null) {
+            return new ResponseEntity<>(updatedService, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
 }

@@ -1,11 +1,11 @@
 package com.salonsync.controller;
 
 import com.salonsync.mapper.NotificationMapper;
-import com.salonsync.model.Notification;
+import com.salonsync.modal.Notification;
 import com.salonsync.payload.dto.BookingDTO;
 import com.salonsync.payload.dto.NotificationDTO;
 import com.salonsync.service.NotificationService;
-import com.salonsync.client.BookingFeignClient;
+import com.salonsync.service.client.BookingFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/notifications/salon-owner")

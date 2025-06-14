@@ -13,7 +13,7 @@ public class TokenResponse {
     private String refreshToken;
 
     @JsonProperty("expires_in")
-    private  int expiresIn;
+    private int expiresIn;
 
     @JsonProperty("token_type")
     private String tokenType;

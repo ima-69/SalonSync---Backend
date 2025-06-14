@@ -26,23 +26,23 @@ public class SecurityConfig {
     public SecurityWebFilterChain springSecurityFilterChain(
             ServerHttpSecurity serverHttpSecurity) {
         serverHttpSecurity.authorizeExchange(
-                        exchanges -> exchanges
-                                .pathMatchers("/auth/**").permitAll()
-                                .pathMatchers("/api/notifications/ws/**").permitAll()
-                                .pathMatchers(
-                                        "/api/salons/**",
-                                        "/api/categories/**",
-                                        "/api/notifications/**",
-                                        "/api/bookings/**",
-                                        "/api/payments/**",
-                                        "/api/service-offering/**",
-                                        "/api/users/**",
-                                        "/api/reviews/**"
-                                ).hasAnyRole("CUSTOMER","SALON_OWNER","ADMIN")
-                                .pathMatchers("/api/categories/salon-owner/**",
-                                        "/api/notifications/salon-owner/**",
-                                        "/api/service-offering/salon-owner/**"
-                                ).hasRole("SALON_OWNER")
+                exchanges -> exchanges
+                        .pathMatchers("/auth/**").permitAll()
+                        .pathMatchers("/api/notifications/ws/**").permitAll()
+                        .pathMatchers(
+                                "/api/salons/**",
+                                "/api/categories/**",
+                                "/api/notifications/**",
+                                "/api/bookings/**",
+                                "/api/payments/**",
+                                "/api/service-offering/**",
+                                "/api/users/**",
+                                "/api/reviews/**"
+                        ).hasAnyRole("CUSTOMER","SALON_OWNER","ADMIN")
+                        .pathMatchers("/api/categories/salon-owner/**",
+                                "/api/notifications/salon-owner/**",
+                                "/api/service-offering/salon-owner/**"
+                        ).hasRole("SALON_OWNER")
                 )
                 .oauth2ResourceServer(oAuth2ResourceServerSpec -> oAuth2ResourceServerSpec
                         .jwt(jwtSpec -> jwtSpec.jwtAuthenticationConverter(grantedAuthoritiesExtractor())));
@@ -54,8 +54,8 @@ public class SecurityConfig {
     private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
-                        "http://localhost:3000/",
-                        "http://localhost:5170"
+                "http://localhost:3000/",
+                "http://localhost:5170"
                 )
         );
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"));
@@ -68,7 +68,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 
     private Converter<Jwt, Mono<AbstractAuthenticationToken>> grantedAuthoritiesExtractor() {
         JwtAuthenticationConverter jwtAuthenticationConverter =

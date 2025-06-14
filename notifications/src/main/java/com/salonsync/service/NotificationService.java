@@ -1,6 +1,6 @@
 package com.salonsync.service;
 
-import com.salonsync.model.Notification;
+import com.salonsync.modal.Notification;
 import com.salonsync.payload.dto.NotificationDTO;
 
 import java.util.List;

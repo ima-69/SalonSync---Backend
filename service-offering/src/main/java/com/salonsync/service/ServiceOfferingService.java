@@ -1,26 +1,29 @@
 package com.salonsync.service;
 
-import com.salonsync.dto.CategoryDTO;
-import com.salonsync.dto.SalonDTO;
-import com.salonsync.dto.ServiceDTO;
-import com.salonsync.model.ServiceOffering;
+import com.salonsync.modal.ServiceOffering;
+import com.salonsync.payload.dto.CategoryDTO;
+import com.salonsync.payload.dto.SalonDTO;
+import com.salonsync.payload.dto.ServiceDTO;
 
-import java.util.List;
 import java.util.Set;
 
 public interface ServiceOfferingService {
 
-     ServiceOffering createService(
-             SalonDTO salonDTO,
-             ServiceDTO serviceDTO,
-             CategoryDTO categoryDTO
-     );
 
-     ServiceOffering updateService(Long salonId, ServiceOffering service) throws Exception;
+    ServiceOffering createService(
+            ServiceDTO service,
+            SalonDTO salon,
+            CategoryDTO category
+    );
 
-     Set<ServiceOffering> getAllServicesBySalonId(Long salonId, Long categoryId);
+    com.salonsync.modal.ServiceOffering updateService(
+            Long serviceId,
+            ServiceOffering service
+    ) throws Exception;
 
-     Set<ServiceOffering> getServicesByIds(Set<Long> ids);
+    Set<ServiceOffering> getAllServicesBySalonId(Long salonId,Long categoryId);
 
-     ServiceOffering getServiceById(Long id) throws Exception;
+    com.salonsync.modal.ServiceOffering getServiceById(Long serviceId);
+
+    Set<ServiceOffering> getServicesByIds(Set<Long> ids);
 }

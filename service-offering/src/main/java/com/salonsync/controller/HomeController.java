@@ -1,5 +1,8 @@
 package com.salonsync.controller;
 
+import com.salonsync.payload.response.ApiResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -7,7 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
 
     @GetMapping
-    public String HomeControllerHandler() {
-        return "service offering microservice for salon booking system";
+    public ResponseEntity<ApiResponse> HomeControllerHandler() {
+        
+        return ResponseEntity.status(
+                        HttpStatus.OK)
+                .body(new ApiResponse(
+
+                        "welcome to salon booking system, service offering api"
+
+
+                ));
     }
 }

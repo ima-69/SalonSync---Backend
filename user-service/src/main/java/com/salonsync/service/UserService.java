@@ -1,16 +1,16 @@
 package com.salonsync.service;
 
+
 import com.salonsync.exception.UserException;
-import com.salonsync.model.User;
+import com.salonsync.modal.User;
 
 import java.util.List;
 
-public interface UserService {
 
-    User createUser(User user);
-    User getUserById(long id) throws UserException;
-    List<User> getAllUsers();
-    User updateUser(long id, User user) throws UserException;
-    void deleteUser(long id) throws UserException;
-    User getUserFromJwt(String jwt) throws Exception;
+public interface UserService {
+	User getUserByEmail(String email) throws UserException;
+	User getUserFromJwtToken(String jwt) throws Exception;
+	User getUserById(Long id) throws UserException;
+	List<User> getAllUsers();
+
 }

@@ -6,7 +6,7 @@ spring:
     name: review
 
   datasource:
-    url: "jdbc:mysql://localhost:3306/reviewdb_salonsync?createDatabaseIfNotExist=true"
+    url: "jdbc:mysql://localhost:3306/salonsync_reviewdb?createDatabaseIfNotExist=true"
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 123@idr
@@ -15,6 +15,19 @@ spring:
       ddl-auto: update
     show-sql: true
 
+
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: salonsync96@gmail.com
+    password: czzt puei zwsf atjz
+    properties:
+      mail:
+        smtp:
+          auth: true
+        starttls:
+          enable: true
 
 management:
   endpoints:
@@ -50,3 +63,8 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8070/eureka/
 
+info:
+  app:
+    name: "Review"
+    description: "USER API For Salon Booking System"
+    version: "1.0.0"

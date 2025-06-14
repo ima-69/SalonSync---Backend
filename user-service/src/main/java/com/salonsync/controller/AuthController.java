@@ -1,52 +1,80 @@
 package com.salonsync.controller;
 
-import com.salonsync.payload.dto.LoginDTO;
-import com.salonsync.payload.dto.SignupDTO;
+
+
+import com.salonsync.payload.request.LoginDto;
+import com.salonsync.payload.request.SignupDto;
+import com.salonsync.payload.response.ApiResponse;
+import com.salonsync.payload.response.ApiResponseBody;
+
 import com.salonsync.payload.response.AuthResponse;
+
+
 import com.salonsync.service.AuthService;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
+
 
     private final AuthService authService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> signup(
-            @RequestBody SignupDTO req
-    ) throws Exception {
+    @GetMapping
+    public ResponseEntity<ApiResponse> HomeControllerHandler() {
 
-        AuthResponse res = authService.signUp(req);
-        return ResponseEntity.ok(res);
+        return ResponseEntity.status(
+                        HttpStatus.OK)
+                .body(new ApiResponse(
+
+                        "welcome to zosh property booking system, user api"
+
+                ));
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<ApiResponseBody<AuthResponse>> signupHandler(
+            @RequestBody SignupDto req) throws Exception {
+
+        System.out.println("signup dto "+req);
+        AuthResponse response=authService.signup(req);
+
+        return ResponseEntity.ok(new ApiResponseBody<>(
+                true,
+                "User created successfully", response)
+        );
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(
-            @RequestBody LoginDTO req
-    ) throws Exception {
+    public ResponseEntity<ApiResponseBody<AuthResponse>> loginHandler(
+            @RequestBody LoginDto req) throws Exception {
 
-        AuthResponse res = authService.login(
-                req.getEmail(),
-                req.getPassword()
+        AuthResponse response=authService.login(req.getEmail(), req.getPassword());
+
+        return ResponseEntity.ok(new ApiResponseBody<>(
+                true,
+                "User logged in successfully",
+                response)
         );
-        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/access-token/refresh-token/{refreshToken}")
-    public ResponseEntity<AuthResponse> getAccessToken(
-            @PathVariable String refreshToken
-    ) throws Exception {
+    public ResponseEntity<ApiResponseBody<AuthResponse>> getAccessTokenHandler(
+            @PathVariable String refreshToken) throws Exception {
 
-        AuthResponse res = authService.getAccessTokenFromRefreshToken(
-            refreshToken
-        );
-        return ResponseEntity.ok(res);
+        AuthResponse response = authService.getAccessTokenFromRefreshToken(refreshToken);
+
+        return ResponseEntity.ok(new ApiResponseBody<>(
+                true,
+                "refresh token received successfully",
+                response
+        ));
     }
-
-
 
 }
